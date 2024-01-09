@@ -47,7 +47,7 @@ class Vector2:
             if b == 0:
                 raise ZeroDivisionError("Cannot divide Vector2 by zero")
             return Vector2(self.x/b, self.y/b)
-        raise TypeError(f'Cannot divide Vector2 by {type(other)}')
+        raise TypeError(f'Cannot divide Vector2 by {type(b)}')
 
 
 class Vector3:

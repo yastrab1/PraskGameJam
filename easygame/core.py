@@ -1,4 +1,6 @@
 import numpy as np
+import earcut
+import pyglet
 
 
 def radians(d: float):
@@ -240,9 +242,8 @@ def _update_camera():
     import pyglet
     from pyglet.math import Mat4, Vec3
     pyglet.gl.glViewport(0, 0, _ctx._win.width, _ctx._win.height)
-    proj_matrix = Mat4.orthogonal_projection(
-        0, _ctx._win.width, 0, _ctx._win.height, -255, 255
-    )
+    proj_matrix = Mat4.perspective_projection( #original ortho 0, _ctx._win.width, 0, _ctx._win.height, -255, 255
+            16/9, 0.1,1000, 120)
     pyglet.window.projection = proj_matrix
     _ctx._program.uniforms['projection'].set(proj_matrix)
 
@@ -283,13 +284,13 @@ def open_window(title, width, height, fps=60, double_buffer=True):
     _ctx._fps = fps
     _ctx._ui_batch = pyglet.graphics.Batch()
     _ctx._win.switch_to()
-    _ctx._camera = _Camera((0, 0), (0, 0), 0, 1)
+    _ctx._camera = _Camera((0, 0,0), (0, 0,0), 0, 1)
     _ctx._saved_cameras = []
     _ctx._channels = {}
     _ctx._fonts = {}
     _ctx._program = ShaderProgram(
-        Shader(vertex2D_source, 'vertex'),
-        Shader(fragment2D_source, 'fragment'),
+        Shader(vertex3D_source, 'vertex'),
+        Shader(fragment3D_source, 'fragment'),
     )
 
     pyglet.gl.glBlendFunc(pyglet.gl.GL_SRC_ALPHA, pyglet.gl.GL_ONE_MINUS_SRC_ALPHA)
@@ -557,6 +558,7 @@ def draw_polygon(*points, color=(1, 1, 1, 1), ui=False):
 
     triangles = tripy.earclip(vertices)
     render_points = []
+
     for triangle in triangles:
         for point in triangle:
             render_points.append(point[0])
@@ -569,7 +571,13 @@ def draw_polygon(*points, color=(1, 1, 1, 1), ui=False):
     )
     poly_batch.draw()
 
-
+def draw_triangle(points, color=(1,1,1,1),ui=False):
+    poly_batch = pyglet.graphics.Batch()
+    _ctx._program.vertex_list(len(points) * 3, pyglet.gl.GL_TRIANGLES, _ctx._ui_batch if ui else poly_batch, None,
+                              position=('f', tuple(points)),
+                              colors=('Bn', tuple(int(x * 255) for x in color * 9)),
+                              )
+    poly_batch.draw()
 def draw_line(*points, thickness=1, color=(1, 1, 1, 1), ui=False):
     """Draw a line between each two successive pair of points.
 
@@ -599,6 +607,10 @@ def draw_line(*points, thickness=1, color=(1, 1, 1, 1), ui=False):
         )
 
 def draw_circle(center, radius, color=(1, 1, 1, 1), ui=False):
+
+    def calculateCirclePoint(i, pts, radius, x, y, z):
+        angle = i / 32 * 2 * math.pi
+        return (x + math.cos(angle) * radius, y + math.sin(angle) * radius, z)
     """Draws a circle with the specified center and radius.
 
     Example:
@@ -611,12 +623,16 @@ def draw_circle(center, radius, color=(1, 1, 1, 1), ui=False):
     ui     -- If True, circle will be drawn in screen space, ignoring the camera.
     """
     import math
-    x, y = center
+    x, y, z = center
     pts = []
     for i in range(32):
-        angle = i/32 * 2*math.pi
-        pts.append((x + math.cos(angle)*radius, y + math.sin(angle)*radius, 0))
+        pts.append((calculateCirclePoint(i, pts, radius, x, y, z),
+                    center,
+                    calculateCirclePoint(i+1,pts,radius,x,y,z)))
     draw_polygon(*pts, color=color, ui=ui)
+
+
+
 
 def draw_text(text, font, size, position=(0, 0), anchor=("left", "bottom"), color=(1, 1, 1, 1), bold=False, italic=False, ui=False):
     """Draw text using the selected font, respecting the current camera settings.
