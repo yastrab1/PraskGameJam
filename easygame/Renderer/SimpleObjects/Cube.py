@@ -57,16 +57,18 @@ surfaces = (
 )
 
 class Cube(Shape):
-    def __init__(self,position,sides):
+    def __init__(self,  viewPort,position, sides, color):
+        super().__init__(viewPort)
         self.position = position
         self.sides = sides
+        self.color = color
     def render(self):
         glBegin(GL_QUADS)
         for surface in surfaces:
             x = 0
             for vertex in surface:
                 x += 1
-                glColor3fv(colors[x])
+                glColor3fv(self.color)
                 glVertex3fv(vertices[vertex])
         glEnd()
 
@@ -74,5 +76,8 @@ class Cube(Shape):
         glBegin(GL_LINES)
         for edge in edges:
             for vertex in edge:
+                glColor3fv([1,1,1])
                 glVertex3fv(vertices[vertex])
         glEnd()
+    def setColor(self,color):
+        self.color = color

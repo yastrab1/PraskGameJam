@@ -3,17 +3,21 @@ from OpenGL.raw.GLU import *
 
 
 class Camera:
-    def __init__(self,position,rotation,screenSize):
+    def __init__(self,position,rotation=None,screenSize=(1980,1200)):
         self.position = position
         self.rotation = rotation
         gluPerspective(45, (screenSize.x / screenSize.y), 0.1, 50.0)
-        # move perspective by x, y, z (-5 to be back from cube)
+
+        if not rotation:
+            return
         self.rotate(rotation)
     def setPosition(self,position):
         self.position = position
-        glTranslatef([position.x,position.y,position.z])
-    def rotate(self,quaternion):
-        glRotatef(quaternion.eulerX, 1, 0, 0)
-        glRotatef(quaternion.eulerX, 0, 1, 0)
-        glRotatef(quaternion.eulerX, 0, 0, 1)
-
+        glTranslatef(position.x,position.y,position.z)
+    def rotate(self,eulerAngles):
+        glRotatef(eulerAngles[0], 1, 0, 0)
+        glRotatef(eulerAngles[1], 0, 1, 0)
+        glRotatef(eulerAngles[2], 0, 0, 1)
+    def translate(self,position):
+        self.position += position
+        glTranslatef(position.x,position.y,position.z)
