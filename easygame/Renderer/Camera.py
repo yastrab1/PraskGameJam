@@ -18,13 +18,13 @@ class Camera:
     def setPosition(self,position):
         self.position = position
         glTranslatef(position.x,position.y,position.z)
-    def setRotation(self,eulerAngles):
+    def rotate(self,eulerAngles):
         self.rotation = eulerAngles
         glTranslatef(-self.position.x,-self.position.y,-self.position.z)
         glRotatef(eulerAngles[0],1,0,0)
-    def rotate(self,eulerAngles):
-        self.rotation+=eulerAngles
-        self.setRotation(self.rotation)
+        glRotatef(eulerAngles[1],0,1,0)
+        glRotatef(eulerAngles[2],0,0,1)
+        glTranslatef(self.position.x,self.position.y,self.position.z)
     def translate(self,position):
         glMatrixMode(GL_MODELVIEW)
         self.position += position
