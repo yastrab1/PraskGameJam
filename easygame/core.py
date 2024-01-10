@@ -1,5 +1,5 @@
 import numpy as np
-import earcut
+#import earcut
 import pyglet
 
 
@@ -33,7 +33,7 @@ vertex2D_source = """#version 150 core
     }
 """
 
-vertex3D_source = """#version 150 core
+vertex3D_source = """#version 330 core
     in vec3 position;
     in vec4 colors;
     out vec4 vertex_colors;
@@ -242,8 +242,9 @@ def _update_camera():
     import pyglet
     from pyglet.math import Mat4, Vec3
     pyglet.gl.glViewport(0, 0, _ctx._win.width, _ctx._win.height)
-    proj_matrix = Mat4.perspective_projection( #original ortho 0, _ctx._win.width, 0, _ctx._win.height, -255, 255
-            16/9, 0.1,1000, 120)
+    print(_ctx._win.width, _ctx._win.height)
+    proj_matrix = Mat4.orthogonal_projection(0, _ctx._win.width, 0, _ctx._win.height, -255, 255)
+    #proj_matrix = Mat4.perspective_projection( 16/9, 0.01,1000, 120)
     pyglet.window.projection = proj_matrix
     _ctx._program.uniforms['projection'].set(proj_matrix)
 
@@ -563,21 +564,26 @@ def draw_polygon(*points, color=(1, 1, 1, 1), ui=False):
         for point in triangle:
             render_points.append(point[0])
             render_points.append(point[1])
+    
+    print(render_points)
+    print(triangles)
 
     poly_batch = pyglet.graphics.Batch()
     _ctx._program.vertex_list(len(triangles)*3, pyglet.gl.GL_TRIANGLES, _ctx._ui_batch if ui else poly_batch , None,
-        position=('f', tuple(render_points)),
+        position=('f3', tuple(render_points)),
         colors=('Bn', tuple(int(x*255) for x in color * (3*len(triangles)))),
     )
     poly_batch.draw()
 
-def draw_triangle(points, color=(1,1,1,1),ui=False):
-    poly_batch = pyglet.graphics.Batch()
-    _ctx._program.vertex_list(len(points) * 3, pyglet.gl.GL_TRIANGLES, _ctx._ui_batch if ui else poly_batch, None,
-                              position=('f', tuple(points)),
-                              colors=('Bn', tuple(int(x * 255) for x in color * 9)),
-                              )
-    poly_batch.draw()
+def draw_triangle(points, color=(255,255,255,255)):
+    batch = pyglet.graphics.Batch()
+    _ctx._program.vertex_list(3, pyglet.gl.GL_TRIANGLES, batch , None, position=('f', points), colors=('Bn', color * 3))
+    '''_ctx._program.vertex_list(3, pyglet.gl.GL_TRIANGLES, batch , None,
+        position=('v3f', tuple(points)),
+        colors=('Bn', tuple(int(x*255) for x in color * 3)),
+    )'''
+    batch.draw()
+
 def draw_line(*points, thickness=1, color=(1, 1, 1, 1), ui=False):
     """Draw a line between each two successive pair of points.
 
