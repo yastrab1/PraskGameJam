@@ -242,9 +242,8 @@ def _update_camera():
     import pyglet
     from pyglet.math import Mat4, Vec3
     pyglet.gl.glViewport(0, 0, _ctx._win.width, _ctx._win.height)
-    print(_ctx._win.width, _ctx._win.height)
     proj_matrix = Mat4.orthogonal_projection(0, _ctx._win.width, 0, _ctx._win.height, -255, 255)
-    #proj_matrix = Mat4.perspective_projection( 16/9, 0.01,1000, 120)
+    #proj_matrix = Mat4.perspective_projection( 1, 0.01,1000, 60)
     pyglet.window.projection = proj_matrix
     _ctx._program.uniforms['projection'].set(proj_matrix)
 
@@ -289,6 +288,10 @@ def open_window(title, width, height, fps=60, double_buffer=True):
     _ctx._saved_cameras = []
     _ctx._channels = {}
     _ctx._fonts = {}
+
+    with open("easygame/shaders/vertex3d.shader", "r") as file:
+        vertex3D_source = file.read()
+
     _ctx._program = ShaderProgram(
         Shader(vertex3D_source, 'vertex'),
         Shader(fragment3D_source, 'fragment'),
