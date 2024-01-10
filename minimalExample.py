@@ -8,7 +8,8 @@ while not should_quit:
         if type(event) is CloseEvent:
             should_quit = True
     
-    draw_triangle((0.0, 0.0, 1.0, 200.0, 0.0, 1.0, 100.0, 300.0, 200.0))
+    draw_triangle((0.0, 0.0, 2.0, 200.0, 0.0, 2.0, 100.0, 300.0, 200.0))
+
     next_frame()
 
 close_window()

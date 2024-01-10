@@ -244,8 +244,7 @@ def _update_camera():
     pyglet.gl.glViewport(0, 0, _ctx._win.width, _ctx._win.height)
     print(_ctx._win.width, _ctx._win.height)
     proj_matrix = Mat4.orthogonal_projection(0, _ctx._win.width, 0, _ctx._win.height, -255, 255)
-    #Mat4.perspective_projection( #original ortho 0, _ctx._win.width, 0, _ctx._win.height, -255, 255
-    #16/9, 0.01,1000, 120)
+    #proj_matrix = Mat4.perspective_projection( 16/9, 0.01,1000, 120)
     pyglet.window.projection = proj_matrix
     _ctx._program.uniforms['projection'].set(proj_matrix)
 
