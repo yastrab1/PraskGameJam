@@ -242,8 +242,9 @@ def _update_camera():
     import pyglet
     from pyglet.math import Mat4, Vec3
     pyglet.gl.glViewport(0, 0, _ctx._win.width, _ctx._win.height)
-    proj_matrix = Mat4.orthogonal_projection(0, _ctx._win.width, 0, _ctx._win.height, -255, 255)
-    #proj_matrix = Mat4.perspective_projection( 1, 0.01,1000, 60)
+    print(_ctx._win.width, _ctx._win.height)
+    # proj_matrix = Mat4.orthogonal_projection(0, _ctx._win.width, 0, _ctx._win.height, -255, 255)
+    proj_matrix = Mat4.perspective_projection( 8/6, 0.01,1000, 120)
     pyglet.window.projection = proj_matrix
     _ctx._program.uniforms['projection'].set(proj_matrix)
 
@@ -255,7 +256,7 @@ def _update_camera():
     matrix = _ctx._win.view
     matrix = matrix.from_translation(Vec3(_ctx._camera.center[0], _ctx._camera.center[1], 0))
     matrix = matrix.rotate((-_ctx._camera.rotation/math.pi*180), Vec3(0, 0, 1))
-    matrix = matrix.scale(Vec3(_ctx._camera.zoom, _ctx._camera.zoom, 0))
+    matrix = matrix.scale(Vec3(_ctx._camera.zoom, _ctx._camera.zoom, _ctx._camera.zoom))
     matrix = matrix.translate(Vec3(-_ctx._camera.position[0], -_ctx._camera.position[1], 0))
     _ctx._win.view = matrix
     _ctx._program.uniforms['projection'].set(proj_matrix @ matrix)
@@ -288,10 +289,6 @@ def open_window(title, width, height, fps=60, double_buffer=True):
     _ctx._saved_cameras = []
     _ctx._channels = {}
     _ctx._fonts = {}
-
-    with open("easygame/shaders/vertex3d.shader", "r") as file:
-        vertex3D_source = file.read()
-
     _ctx._program = ShaderProgram(
         Shader(vertex3D_source, 'vertex'),
         Shader(fragment3D_source, 'fragment'),
@@ -567,7 +564,7 @@ def draw_polygon(*points, color=(1, 1, 1, 1), ui=False):
         for point in triangle:
             render_points.append(point[0])
             render_points.append(point[1])
-    
+
     print(render_points)
     print(triangles)
 
