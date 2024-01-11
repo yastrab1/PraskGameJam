@@ -11,6 +11,8 @@ class BallCollider(AbstractCollider):
         super().__init__()
         self.center = center
         self.radius = radius
+    def changePos(self,position):
+        self.center = position
 
     def checkHit(self, ray: Ray) -> Collision:
         if ray.position*ray.direction - self.center*ray.direction**2 - ray.position*ray.position + self.center*self.center + 2*ray.position*self.center + self.radius**2 < 0:

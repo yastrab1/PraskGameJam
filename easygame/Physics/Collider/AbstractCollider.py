@@ -6,8 +6,10 @@ class Collision:
         self.hitPos = hitPos
         self.hit = didHit
 class AbstractCollider:
+    center:Vector3
     def __init__(self):
         pass
     def checkHit(self,ray)->Collision:
         raise NotImplementedError("Cant use AbstractCollider")
-
+    def changePos(self,position):
+        raise NotImplementedError("No")

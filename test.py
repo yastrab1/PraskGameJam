@@ -25,14 +25,15 @@ def main():
     # two buffers to comply with monitor refresh rates
     # OPENGL says we will be doing opengl calls
     pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
-    camera = Camera(Vector3(0,0,0),rotation=(50,25,0),screenSize=Vector2(*display))
+    camera = Camera(Vector3(0,0,0),rotation=(0,0,0),screenSize=Vector2(*display))
     viewPort = Viewport()
 
     cubes = []
-    for i in range(40):
-        cube = Cube(viewPort, Vector3(i,i,i), Vector3(1, 1, 1), (255, 255, 255))
+    for i in range(4):
+        cube = Cube(viewPort, Vector3(i,i,i), Vector3(1, 1, 1), (i*5, i*5, i*5),True)
         cubes.append(cube)
     r, g, b = 0, 0, 0
+    # nonPhysicsCube = Cube(viewPort,Vector3(-10,-10,-10),Vector3(20,20,1),(255,255,255),False)
     # game loop
 
     while True:
@@ -77,10 +78,13 @@ def main():
         # render cube lines
         viewPort.render()
 
+        for i in range(len(cubes)):
+            cube = cubes[i]
+            color = updateColors(*cube.color)
+            cubes[i].setColor(color)
+
         colors = updateColors(r,g,b)
         r,g,b = colors
-        for cube in cubes:
-            cube.setColor((r,g,b))
         # prevTime = pygame.time.get_ticks()
         # Raycaster.raycast(viewPort,Ray(camera.position,Vector3(1,0,0))).hitPos
         # afterTime = pygame.time.get_ticks()

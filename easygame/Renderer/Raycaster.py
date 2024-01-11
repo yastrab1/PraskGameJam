@@ -1,3 +1,6 @@
+import numpy
+
+from easygame.Physics.Collider.AbstractCollider import Collision
 from easygame.vector import Vector3
 
 
@@ -8,10 +11,13 @@ class Raycaster:
         collisions = []
         for obj in viewport.objects:
             collision =obj.collider.checkHit(ray)
-            if not collision:
+            length = ray.lengthFromOrigin(collision.hitPos)
+            if length == numpy.nan:
                 continue
-            collisions.append([collision,ray.lengthFromOrigin(collision.hitPos)])
-            collisions = sorted(collisions, key=lambda x:x[1])
+            collisions.append([collision,length])
+        collisions = sorted(collisions, key=lambda x:x[1])
+        if len(collisions) < 1:
+            return Collision(None,False)
         return collisions[0][0]
 
 class Ray:

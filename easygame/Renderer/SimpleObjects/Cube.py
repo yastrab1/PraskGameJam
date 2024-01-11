@@ -1,6 +1,7 @@
 from OpenGL.GL import *
 
 from easygame.Physics.Collider.BoxCollider import BoxCollider
+from easygame.Physics.PhysicsObject import PhysicsObject
 from easygame.Renderer.SimpleObjects.Shape import Shape
 from easygame.vector import Vector3
 
@@ -60,14 +61,20 @@ surfaces = (
 
 
 class Cube(Shape):
-    def __init__(self, viewPort, position, sides, color):
+    def __init__(self, viewPort, position, sides, color,isPhysics):
         super().__init__(viewPort)
+        self.physicsObject = PhysicsObject(viewPort, self) if isPhysics else None
         self.collider = BoxCollider(position, sides)
         self.position = position
         self.sides = sides
         self.color = color
-        self.vertices = [[vertex.getAxisByIndex(posIndex) * sides.getAxisByIndex(posIndex)+position.getAxisByIndex(posIndex) for posIndex in range(3)] for
-                         vertex in vertices]
+        self.recalculateVertices(position, sides)
+
+    def recalculateVertices(self, position, sides):
+        self.vertices = [
+            [vertex.getAxisByIndex(posIndex) * sides.getAxisByIndex(posIndex) + position.getAxisByIndex(posIndex) for
+             posIndex in range(3)] for
+            vertex in vertices]
 
     def render(self):
         glBegin(GL_TRIANGLES)
@@ -86,8 +93,11 @@ class Cube(Shape):
         glColor3fv([1, 1, 1])
         for edge in edges:
             for vertex in edge:
-
                 glVertex3fv(self.vertices[vertex])
         glEnd()
     def setColor(self, color):
         self.color = color
+    def move(self,pos):
+        super().move(pos)
+        self.position = self.position+pos
+        self.recalculateVertices(self.position,self.sides)
