@@ -20,7 +20,7 @@ def main():
     prevTime = 0
     inputSystem = InputSystem()
     pygame.init()
-    display = (1000,500)
+    display = (1280,720)
     # DOUBLEBUF is a type of buffering where there are
     # two buffers to comply with monitor refresh rates
     # OPENGL says we will be doing opengl calls

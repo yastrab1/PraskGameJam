@@ -33,7 +33,8 @@ class BoxCollider(AbstractCollider):
                 continue
             collisions.append([collision,ray.lengthFromOrigin(collision.hitPos)])
         collisions = sorted(collisions,key=lambda x:x[1])
-        if len(collisions) < 1:
-            return None
+        for collision in collisions:
+            x,y,z = collision.hitPos
+
         return collisions[0][0]
 

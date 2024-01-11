@@ -103,7 +103,8 @@ class Vector3:
                 raise TypeError(f"Cannot multiply Vector3 and np.ndarray of shape {other.shape}")
         else:
             raise TypeError(f"Cannot multiply Vector3 and {type(other)}")
-
+    def __rmul__(self, other):
+        return self*other
     def __matmul__(self, other):
         y = self.y * other.z - self.z * other.y
         z = self.z* other.x - self.x * other.z

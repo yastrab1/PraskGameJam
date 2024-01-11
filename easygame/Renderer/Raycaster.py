@@ -4,6 +4,7 @@ from easygame.vector import Vector3
 class Raycaster:
     @staticmethod
     def raycast(viewport, ray):
+        ray.direction.normalize()
         collisions = []
         for obj in viewport.objects:
             collision =obj.collider.checkHit(ray)
@@ -18,9 +19,9 @@ class Ray:
     position: Vector3
     direction: Vector3
 
-    def __init__(self, position, direction):
-        self.position = position
-        self.direction = direction
+    def __init__(self, position:Vector3, direction:Vector3):
+        self.position:Vector3 = position
+        self.direction:Vector3 = direction
 
     def lengthFromOrigin(self, point: Vector3):
         return (self.position - point).magnitude()
