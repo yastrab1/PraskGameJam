@@ -1,4 +1,4 @@
-from easygame.Collider.AbstractCollider import AbstractCollider, Collision
+from easygame.Physics.Collider.AbstractCollider import AbstractCollider, Collision
 from easygame.Renderer.Face import Face
 from easygame.Renderer.Raycaster import Ray
 from easygame.vector import Vector3

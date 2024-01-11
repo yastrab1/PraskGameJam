@@ -1,6 +1,6 @@
 from OpenGL.GL import *
 
-from easygame.Collider.BoxCollider import BoxCollider
+from easygame.Physics.Collider.BoxCollider import BoxCollider
 from easygame.Renderer.SimpleObjects.Shape import Shape
 from easygame.vector import Vector3
 
