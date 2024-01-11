@@ -5,14 +5,14 @@ class Vector2:
 
     x: float
     y: float
-    
+
     def __init__(self, x: float = 0, y: float = 0):
         self.x = x
         self.y = y
-    
+
     def __str__(self):
         return f"[{self.x}, {self.y}]"
-    
+
     def __repr__(self):
         return str(self)
 
@@ -29,7 +29,7 @@ class Vector2:
 
     def __sub__(self, b):
         if type(b) != Vector2:
-            raise TypeError(f"Cannot subtract {type(other)} from Vector2")
+            raise TypeError(f"Cannot subtract {type(b)} from Vector2")
         return Vector2(self.x - b.x, self.y - b.y)
 
     def __mul__(self, b):
@@ -38,14 +38,14 @@ class Vector2:
         elif type(b) in (int, float):
             return Vector2(self.x * b, self.y * b)
         elif type(b) == np.ndarray:
-            if other.shape == (2,):
-                return self.x * other[0] + self.y * other[1]
-            elif other.shape == (2, 3):
-                return other@np.array([self.x, self.y])
-            elif other.shape == (2, 2):
-                return other@np.array([self.x, self.y])
+            if b.shape == (2,):
+                return self.x * b[0] + self.y * b[1]
+            elif b.shape == (2, 3):
+                return b@np.array([self.x, self.y])
+            elif b.shape == (2, 2):
+                return b@np.array([self.x, self.y])
             else:
-                raise TypeError(f"Cannot multiply Vector3 and np.ndarray of shape {other.shape}")
+                raise TypeError(f"Cannot multiply Vector3 and np.ndarray of shape {b.shape}")
 
     def __truediv__(self, b):
         if type(b) in (float, int):
@@ -65,21 +65,21 @@ class Vector3:
         self.x = x
         self.y = y
         self.z = z
-    
+
     def __str__(self):
         return f"[{self.x}, {self.y}, {self.z}]"
-    
+
     def __repr__(self):
         return str(self)
 
     def __abs__(self):
         return (self.x**2 + self.y**2 + self.z**2)**.5
-    
+
     def __add__(self, other):
         if type(other) != Vector3:
             raise TypeError(f"Cannot add Vector3 and {type(other)}")
         return Vector3(self.x + other.x, self.y + other.y, self.z + other.z)
-    
+
     def __sub__(self, other):
         if type(other) != Vector3:
             raise TypeError(f"Cannot subtract Vector3 and {type(other)}")
@@ -102,9 +102,16 @@ class Vector3:
                 raise TypeError(f"Cannot multiply Vector3 and np.ndarray of shape {other.shape}")
         else:
             raise TypeError(f"Cannot multiply Vector3 and {type(other)}")
-        
+
     def __matmul__(self, other):
         x = self.y * other.z - self.z * other.y
         y = self.z* other.x - self.x * other.z
         z = self.x * other.y - self.y * other.x
         return Vector3(x,y,z)
+    def __truediv__(self, other):
+        return Vector3(self.x/other, self.y/other, self.z/other)
+
+    def magnitude(self):
+        return np.sqrt(self.x**2+self.y**2+self.z**2)
+    def normalize(self):
+        return self/self.magnitude()

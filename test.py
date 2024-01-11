@@ -6,6 +6,7 @@ from OpenGL.GLU import *
 from easygame.Input import InputSystem
 from easygame.Renderer.Camera import Camera
 from easygame.Renderer.SimpleObjects.Cube import Cube
+from easygame.Renderer.SimpleObjects.Mesh import Mesh
 from easygame.Renderer.Viewport import Viewport
 from easygame.vector import Vector3, Vector2
 
@@ -25,7 +26,7 @@ def main():
     camera = Camera(Vector3(0,0,0),rotation=(50,25,0),screenSize=Vector2(*display))
     viewPort = Viewport()
 
-
+    fish = Mesh(viewPort, "13007_Blue_Green_Reef_Chromis_v1.obj")
     cube = Cube(viewPort,Vector3(10,10,10),(10,10,10),(0,0,0))
     cube2 = Cube(viewPort,Vector3(20,20,20),(5,10,2),(0,0,0))
     r, g, b = 0, 0, 0
@@ -64,7 +65,10 @@ def main():
             camera.rotate((0,1,0))
         if inputSystem.isKeyPressed(pygame.K_DOWN):
             camera.rotate((0,-1,0))
-
+        if inputSystem.isKeyPressed(pygame.K_PAGEUP):
+            camera.rotate((0,0,1))
+        if inputSystem.isKeyPressed(pygame.K_PAGEDOWN):
+            camera.rotate((0,0,-1))
 
         # render cube lines
         viewPort.render()

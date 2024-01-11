@@ -1,29 +1,20 @@
 from OpenGL.GL import *
-
+import pywavefront
 from easygame.Renderer.SimpleObjects.Shape import Shape
 
 class Mesh(Shape):
-    def __init__(self,  viewPort, position, triangles, material):
+    def __init__(self,viewPort,path):
         super().__init__(viewPort)
-        self.position = position
-        self.vertices = [[vertex[posIndex]*sides[posIndex]for posIndex in range(3)]for vertex in vertices]
-        print(self.vertices)
-    def render(self):
-        glBegin(GL_QUADS)
-        for surface in surfaces:
-            x = 0
-            for vertex in surface:
-                x += 1
-                glColor3fv(self.color)
-                glVertex3fv(self.vertices[vertex])
-        glEnd()
+        self.loadFromFile(path)
+        self.color = (1,1,1)
+        print("Finished loading")
+    def loadFromFile(self,path):
+        scene = pywavefront.Wavefront(path)
+        for name,material in scene.materials.items():
+            # print("material format"+material.vertex_format)
 
-        # render lines between vertices
-        glBegin(GL_LINES)
-        for edge in edges:
-            for vertex in edge:
-                glColor3fv([1,1,1])
-                glVertex3fv(self.vertices[vertex])
-        glEnd()
+            self.vertices = material.vertices
+    def render(self):
+        pass
     def setColor(self,color):
         self.color = color
