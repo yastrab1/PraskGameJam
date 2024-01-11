@@ -14,6 +14,10 @@ class Raycaster:
         return collisions[0][0]
 
 class Ray:
+
+    position: Vector3
+    direction: Vector3
+
     def __init__(self, position, direction):
         self.position = position
         self.direction = direction
