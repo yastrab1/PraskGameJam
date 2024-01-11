@@ -14,12 +14,12 @@ class Face:
 
     def checkFaceHit(self, ray: Ray) -> Collision:
         normal = self.normal
-        d = (self.vertices[0] - ray) * normal / (normal * ray.direction)
+        d = ((self.vertices[0] - ray.direction) * normal) / (normal * ray.direction)
         intersection = ray.direction * d + ray.position
-        hit = self.inBounds(intersection)
+        hit = True
         collision = Collision(intersection if hit else None, hit)
         return collision
 
     def inBounds(self, point:Vector3):
-        result = (point - self.vertices) * self.calculateNormal()
+        result = (point - self.vertices[0]) * self.calculateNormal()
         return True if result == 0 else False

@@ -9,11 +9,11 @@ class Mesh(Shape):
         self.color = (1,1,1)
         print("Finished loading")
     def loadFromFile(self,path):
-        scene = pywavefront.Wavefront(path)
-        for name,material in scene.materials.items():
+        # scene = pywavefront.Wavefront(path)
+        # for name,material in scene.materials.items():
             # print("material format"+material.vertex_format)
-
-            self.vertices = material.vertices
+        pass
+            # self.vertices = material.vertices
     def render(self):
         pass
     def setColor(self,color):

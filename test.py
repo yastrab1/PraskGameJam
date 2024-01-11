@@ -5,6 +5,7 @@ from OpenGL.GLU import *
 
 from easygame.Input import InputSystem
 from easygame.Renderer.Camera import Camera
+from easygame.Renderer.Raycaster import Raycaster, Ray
 from easygame.Renderer.SimpleObjects.Cube import Cube
 from easygame.Renderer.SimpleObjects.Mesh import Mesh
 from easygame.Renderer.Viewport import Viewport
@@ -16,9 +17,10 @@ from easygame.vector import Vector3, Vector2
 
 
 def main():
+    prevTime = 0
     inputSystem = InputSystem()
     pygame.init()
-    display = (1280, 720)
+    display = (1000,500)
     # DOUBLEBUF is a type of buffering where there are
     # two buffers to comply with monitor refresh rates
     # OPENGL says we will be doing opengl calls
@@ -26,11 +28,13 @@ def main():
     camera = Camera(Vector3(0,0,0),rotation=(50,25,0),screenSize=Vector2(*display))
     viewPort = Viewport()
 
-    fish = Mesh(viewPort, "13007_Blue_Green_Reef_Chromis_v1.obj")
-    cube = Cube(viewPort,Vector3(10,10,10),(10,10,10),(0,0,0))
-    cube2 = Cube(viewPort,Vector3(20,20,20),(5,10,2),(0,0,0))
+    cubes = []
+    for i in range(40):
+        cube = Cube(viewPort, Vector3(i,i,i), Vector3(1, 1, 1), (255, 255, 255))
+        cubes.append(cube)
     r, g, b = 0, 0, 0
     # game loop
+
     while True:
 
         # pygame events
@@ -75,12 +79,18 @@ def main():
 
         colors = updateColors(r,g,b)
         r,g,b = colors
-        cube.setColor((r,g,b))
-        cube2.setColor((r,g,b))
+        for cube in cubes:
+            cube.setColor((r,g,b))
+        # prevTime = pygame.time.get_ticks()
+        # Raycaster.raycast(viewPort,Ray(camera.position,Vector3(1,0,0))).hitPos
+        # afterTime = pygame.time.get_ticks()
+
         # update display
         pygame.display.flip()
         # update loop sleep
-        pygame.time.wait(10)
+        # diff = afterTime-prevTime
+        # fps = 1000/diff
+        # print(fps)
 def updateColors(r,g,b):
     if r<1:
         r+=1/10

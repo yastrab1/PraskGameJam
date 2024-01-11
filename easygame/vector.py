@@ -1,3 +1,4 @@
+import numpy
 import numpy as np
 
 
@@ -87,11 +88,11 @@ class Vector3:
 
 
     def __mul__(self, other):
-        if type(other) == Vector3:
-            return Vector3(self.x * other.x, self.y * other.y,self.z*other.z)
-        elif type(other) in (int, float):
+        if isinstance(other,Vector3):
+            return self.x * other.x+self.y * other.y+self.z*other.z
+        elif isinstance(other,int) or isinstance(other,float) or isinstance(other,numpy.float64):
             return Vector3(self.x*other, self.y*other, self.z*other)
-        elif type(other) == np.ndarray:
+        elif type(other) is type(np.ndarray):
             if other.shape == (3,):
                 return self.x * other[0] + self.y * other[1] + self.z * other[2]
             elif other.shape == (3, 3):
@@ -104,9 +105,9 @@ class Vector3:
             raise TypeError(f"Cannot multiply Vector3 and {type(other)}")
 
     def __matmul__(self, other):
-        x = self.y * other.z - self.z * other.y
-        y = self.z* other.x - self.x * other.z
-        z = self.x * other.y - self.y * other.x
+        y = self.y * other.z - self.z * other.y
+        z = self.z* other.x - self.x * other.z
+        x = self.x * other.y - self.y * other.x
         return Vector3(x,y,z)
     def __truediv__(self, other):
         return Vector3(self.x/other, self.y/other, self.z/other)
@@ -115,3 +116,10 @@ class Vector3:
         return np.sqrt(self.x**2+self.y**2+self.z**2)
     def normalize(self):
         return self/self.magnitude()
+    def getAxisByIndex(self, item):
+        if item == 0:
+            return self.x
+        if item == 1:
+            return self.y
+        if item == 2:
+            return self.z

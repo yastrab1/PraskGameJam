@@ -5,17 +5,17 @@ from easygame.vector import Vector3
 
 
 class BoxCollider(AbstractCollider):
-    def __init__(self,sideLengths:Vector3,corner:Vector3):
+    def __init__(self, sideLengths: Vector3, corner: Vector3):
+        super().__init__()
         self.vertices = [
-            [corner],
-            [Vector3(corner.x+sideLengths.x,corner.y,corner.z)],
-            [Vector3(corner.x,corner.y+sideLengths.y,corner.z)],
-            [Vector3(corner.x+sideLengths.x,corner.y+sideLengths.y,corner.z)],
-            [corner.x,corner.y,corner.z+sideLengths.z],
-            [corner.x+sideLengths.x,corner.y,corner.z+sideLengths.z],
-            [corner.x,corner.y+sideLengths.y,corner.z+sideLengths.z],
-            [corner.x+sideLengths.x,corner.y+sideLengths.y,corner.z+sideLengths.z]
-        ]
+            Vector3(corner.x,corner.y,corner.z),
+            Vector3(corner.x+sideLengths.x,corner.y,corner.z),
+            Vector3(corner.x,corner.y+sideLengths.y,corner.z),
+            Vector3(corner.x+sideLengths.x,corner.y+sideLengths.y,corner.z),
+            Vector3(corner.x,corner.y,corner.z+sideLengths.z),
+            Vector3(corner.x+sideLengths.x,corner.y,corner.z+sideLengths.z),
+            Vector3(corner.x,corner.y+sideLengths.y,corner.z+sideLengths.z),
+            Vector3(corner.x+sideLengths.x,corner.y+sideLengths.y,corner.z+sideLengths.z)]
         self.faces = [
             Face([self.vertices[0],self.vertices[1],self.vertices[2],self.vertices[3]]),
             Face([self.vertices[3],self.vertices[2],self.vertices[7],self.vertices[6]]),
@@ -33,5 +33,7 @@ class BoxCollider(AbstractCollider):
                 continue
             collisions.append([collision,ray.lengthFromOrigin(collision.hitPos)])
         collisions = sorted(collisions,key=lambda x:x[1])
+        if len(collisions) < 1:
+            return None
         return collisions[0][0]
 
