@@ -61,15 +61,17 @@ surfaces = (
 
 
 class Cube(Shape):
+    collider:BoxCollider
     def __init__(self, viewPort, position, sides, color,isPhysics):
-        super().__init__(viewPort)
-        self.physicsObject = PhysicsObject(viewPort, self) if isPhysics else None
+
+
         self.collider = BoxCollider(position, sides)
         self.position = position
         self.sides = sides
         self.color = color
         self.recalculateVertices(position, sides)
-
+        self.physicsObject = PhysicsObject(viewPort, self) if isPhysics else None
+        super().__init__(viewPort)
     def recalculateVertices(self, position, sides):
         self.vertices = [
             [vertex.getAxisByIndex(posIndex) * sides.getAxisByIndex(posIndex) + position.getAxisByIndex(posIndex) for

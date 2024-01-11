@@ -10,8 +10,9 @@ class Viewport:
         self.objects = []
         self.physicsObjects = []
         self.prevTime = 0
-    def registerShape(self, object:Shape):
-        self.objects.append(object)
+    def registerShape(self, obj:Shape):
+        self.objects.append(obj)
+        print(obj.collider.center.magnitude())
     def registerPhysicsObject(self,object:PhysicsObject):
         self.physicsObjects.append(object)
     def render(self):

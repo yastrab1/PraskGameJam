@@ -1,3 +1,5 @@
+import numpy
+
 from easygame.Physics.Collider.AbstractCollider import AbstractCollider, Collision
 from easygame.Renderer.Face import Face
 from easygame.Renderer.Raycaster import Ray
@@ -7,11 +9,12 @@ from easygame.vector import Vector3
 class BoxCollider(AbstractCollider):
     def __init__(self, sideLengths: Vector3, corner: Vector3):
         self.sideLengths = sideLengths
-        self.center = Vector3(corner.x+sideLengths.x/2, corner.y+sideLengths.y/2,corner.z+sideLengths.z/2)
+        self.center = Vector3(corner.x + sideLengths.x / 2, corner.y + sideLengths.y / 2, corner.z + sideLengths.z / 2)
         super().__init__()
         self.computeVertices(corner, sideLengths)
-    def changePos(self,corner):
-        self.computeVertices(corner,self.sideLengths)
+
+    def changePos(self, corner):
+        self.computeVertices(corner, self.sideLengths)
 
     def computeVertices(self, corner, sideLengths):
         self.vertices = [
@@ -32,17 +35,19 @@ class BoxCollider(AbstractCollider):
             Face([self.vertices[4], self.vertices[0], self.vertices[3], self.vertices[6]])
         ]
 
-    def checkHit(self,ray:Ray) -> Collision:
+    def checkHit(self, ray: Ray) -> Collision:
         collisions = []
         for face in self.faces:
             collision = face.checkFaceHit(ray)
             if not collision.hit:
                 continue
-            collisions.append([collision,ray.lengthFromOrigin(collision.hitPos)])
-        collisions = sorted(collisions,key=lambda x:x[1])
+            if numpy.isnan(collision.hitPos.x):
+                continue
+            collisions.append([collision, ray.lengthFromOrigin(collision.hitPos)])
+        collisions = sorted(collisions, key=lambda x: x[1])
         for collision in collisions:
             diff = collision[0].hitPos - ray.position
             dot = diff * ray.direction
-            if dot<0:
+            if dot < 0:
                 continue
             return collisions[0][0]

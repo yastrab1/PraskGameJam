@@ -30,10 +30,10 @@ def main():
 
     cubes = []
     for i in range(4):
-        cube = Cube(viewPort, Vector3(i,i,i), Vector3(1, 1, 1), (i*5, i*5, i*5),True)
+        cube = Cube(viewPort, Vector3(i,i,i), Vector3(1, 1, 1), (i*5, i*5, i*5),False)
         cubes.append(cube)
     r, g, b = 0, 0, 0
-    # nonPhysicsCube = Cube(viewPort,Vector3(-10,-10,-10),Vector3(20,20,1),(255,255,255),False)
+    nonPhysicsCube = Cube(viewPort,Vector3(-10,-10,-10),Vector3(20,20,1),(22,22,22),False)
     # game loop
 
     while True:

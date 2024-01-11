@@ -11,13 +11,16 @@ class Raycaster:
         collisions = []
         for obj in viewport.objects:
             collision =obj.collider.checkHit(ray)
+            if not collision:
+                continue
             length = ray.lengthFromOrigin(collision.hitPos)
-            if length == numpy.nan:
+            if numpy.isnan(collision.hitPos.x):
                 continue
             collisions.append([collision,length])
         collisions = sorted(collisions, key=lambda x:x[1])
         if len(collisions) < 1:
             return Collision(None,False)
+
         return collisions[0][0]
 
 class Ray:
